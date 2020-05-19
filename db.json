@@ -1,0 +1,19 @@
+{
+  "customers": [
+    {
+        "dni": "45434545L",
+        "name": "Kevin",
+        "age": 27
+    },
+    {
+        "dni": "45434547L",
+        "name": "Pepe",
+        "age": 56
+    },
+    {
+        "dni": "45434565L",
+        "name": "Marta",
+        "age": 23
+    }        
+  ]
+}
