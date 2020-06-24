@@ -15,7 +15,7 @@ class CustomersContainer extends Component {
     }
     
     handleAddNew = () => {
-        this.props.history.push('customer/new');
+        this.props.history.push('customers/new');
     }
 
     renderBody = customers => (

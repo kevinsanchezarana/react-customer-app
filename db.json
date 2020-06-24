@@ -1,19 +1,22 @@
 {
   "customers": [
     {
-        "dni": "45434545L",
-        "name": "Kevin",
-        "age": 27
+      "id": "45434545L",
+      "dni": "45434545L",
+      "name": "Kevin Sanchez 2",
+      "age": 27
     },
     {
-        "dni": "45434547L",
-        "name": "Pepe",
-        "age": 56
+      "id": "45434547L",
+      "dni": "45434547L",
+      "name": "Pepe",
+      "age": 56
     },
     {
-        "dni": "45434565L",
-        "name": "Marta",
-        "age": 23
-    }        
+      "id": "45434565L",
+      "dni": "45434565L",
+      "name": "Marta",
+      "age": 23
+    }
   ]
 }

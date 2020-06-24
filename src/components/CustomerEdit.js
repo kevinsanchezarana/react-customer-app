@@ -2,38 +2,74 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { reduxForm, Field } from 'redux-form';
 import { setPropsAsInitial } from '../helpers/setPropsAsInitial';
+import CustomersActions from './CustomersActions';
 
 
 const isRequired = ( value ) => (
     !value && "Este campo es requerido"
 )
 
-const MyField = ( { input, meta } ) => (
+const isNumber = ( value ) => (
+    isNaN( Number( value ) ) && "Este campo debe se numérico"
+)
+
+const MyField = ( { input, meta, type, label, name } ) => (
     <div>
-        <input {...input} type="text"></input>
+        <label htmlFor={name}>{label}</label>
+        <input {...input} type={ !type ? "text" : type }></input>
         { meta.error && meta.touched && <span>{meta.error}</span> }
     </div>
 )
 
+//Validacines globales
+//Prioridad validación especifica y después la global
+const validate = values => {
 
-const CustomerEdit = ( { name, dni, age } ) => {
+    const error = {};
+
+    if ( !values.dni ){
+        error.dni = "El campo DNI es requerido";
+    }
+
+    if ( !values.name ){
+        error.name = "El campo Nombre es requerido";
+    }
+
+    return error;
+
+}
+
+//Es propiedad de react-form: submitting 
+//handleSubmit es una funcion que esta en react-form, de ahi que su nombre sea requerido
+const CustomerEdit = ( { name, dni, age, handleSubmit, submitting, onBack } ) => {
     return (
         <div>
             <h2>Edición del cliente</h2>
             {/* form>(div>label+Field)*3 */}
-            <form action="">
-                <div>
-                    <label htmlFor="name">Nombre</label>
-                    <Field name="name" component={MyField} type="text" validate={isRequired}></Field>
-                </div>
-                <div>
-                    <label htmlFor="dni">DNI</label>
-                    <Field name="dni" component={MyField} type="text" validate={isRequired}></Field>
-                </div>
-                <div>
-                    <label htmlFor="age">Edad</label>
-                    <Field name="age" component={MyField} type="number" validate={isRequired}></Field>
-                </div>
+            <form action="" onSubmit={handleSubmit}>
+                <Field 
+                    name="name" 
+                    component={MyField} 
+                    type="text" 
+                    label = "Nombre"
+                />    
+                <Field 
+                    name="dni" 
+                    component={MyField} 
+                    type="text" 
+                    label = "DNI"
+                /> 
+                <Field 
+                    name="age" 
+                    component={MyField} 
+                    type="number" 
+                    validate={[isRequired, isNumber]}
+                    label = "Edad"
+                /> 
+                <CustomersActions>
+                    <button type="submit" disabled={submitting}>Guardar</button>
+                    <button type="button" onClick={onBack}>Cancelar</button>
+                </CustomersActions>
             </form>
         </div>
     );
@@ -43,7 +79,8 @@ CustomerEdit.propTypes = {
     name: PropTypes.string.isRequired,
     dni: PropTypes.string.isRequired,
     age: PropTypes.number.isRequired,
+    onBack: PropTypes.func.isRequired,
 };
 
 //Añadimos las funcionalidades de reactRedux a nuestro componente, ya reduxForm tiene actions creator por defecto
-export default setPropsAsInitial( reduxForm( { form: 'EditCustomer' } )(CustomerEdit) );
+export default setPropsAsInitial( reduxForm( { form: 'EditCustomer', validate } )(CustomerEdit) );
