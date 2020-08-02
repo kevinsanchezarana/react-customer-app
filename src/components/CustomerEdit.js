@@ -39,6 +39,12 @@ const validate = values => {
 
 }
 
+//Se ejecuta primer el parse, despues normalize y cuando te llegan los datos del estado el format
+const toNumber = value => value && Number( value );
+const toUpper = value => value && value.toUpperCase();
+const toLower = value => value && value.toLowerCase();
+const onlyGrow = ( value, previousValue, values ) => value && previousValue && ( value > previousValue ? value : previousValue );
+
 //Es propiedad de react-form: submitting 
 //handleSubmit es una funcion que esta en react-form, de ahi que su nombre sea requerido
 const CustomerEdit = ( { name, dni, age, handleSubmit, submitting, onBack } ) => {
@@ -52,6 +58,8 @@ const CustomerEdit = ( { name, dni, age, handleSubmit, submitting, onBack } ) =>
                     component={MyField} 
                     type="text" 
                     label = "Nombre"
+                    parse= { toUpper }
+                    format = { toLower }
                 />    
                 <Field 
                     name="dni" 
@@ -65,6 +73,8 @@ const CustomerEdit = ( { name, dni, age, handleSubmit, submitting, onBack } ) =>
                     type="number" 
                     validate={[isRequired, isNumber]}
                     label = "Edad"
+                    parse = {toNumber}
+                    normalize = { onlyGrow }
                 /> 
                 <CustomersActions>
                     <button type="submit" disabled={submitting}>Guardar</button>

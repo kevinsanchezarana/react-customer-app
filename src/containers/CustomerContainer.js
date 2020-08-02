@@ -8,6 +8,7 @@ import CustomerEdit from '../components/CustomerEdit';
 import CustomerData from '../components/CustomerData';
 import { fetchCustomers } from '../actions/fetchCustomers';
 import { updateCustomer } from '../actions/updateCustomer';
+import { SubmissionError } from 'redux-form';
 
 class CustomerContainer extends Component {
 
@@ -18,16 +19,34 @@ class CustomerContainer extends Component {
         }
     }
     
+    isPromise = value => {
+        return value && value.then && typeof value.then === 'function';
+    }
 
     handleSubmit = values => {
-        const { id } = values;
-        this.props.updateCustomer( id, values );
+        console.log(JSON.stringify(values));
+        const { id } = values; 
+        const promise = this.props.updateCustomer(id, values);
+        if( !this.isPromise( promise ) ){
+            return promise;
+        }
+
+        debugger;
+        promise.then ( r => {
+            if ( r.error ){
+                throw new SubmissionError(r.payload);
+            }
+        });
     }
 
     handleOnBack = () => {
         this.props.history.goBack();
     }    
-    
+
+    handleOnSubmitSuccess = () => {
+        this.props.history.goBack();
+    }
+
     renderBody = () => (
 
         // Con el spread operations le pasamos el objeto como propiedades independientes al componente
@@ -38,6 +57,7 @@ class CustomerContainer extends Component {
                     const CustomerControl = match ? CustomerEdit : CustomerData;
                     return <CustomerControl { ...this.props.customer } 
                                             onSubmit={this.handleSubmit}
+                                            onSubmitSuccess={this.handleOnSubmitSuccess}
                                             onBack={this.handleOnBack}
                             />;
                 }
